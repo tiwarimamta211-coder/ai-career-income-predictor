@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Career Income Predictor | IncomeAIHub</title>
+<meta name="description" content="Predict your career income growth for the next 10 years using AI-powered analysis. Free tool for Indian freelancers & professionals.">
+
+<!-- ============ GOOGLE ADSENSE (Replace ca-pub-XXXXXXXXXXXXXXXX with your Publisher ID before deployment) ============ -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<style>
+  :root{
+    --cyan:#00fff2;
+    --cyan-dim:#00b3ad;
+    --purple:#b026ff;
+    --purple-dim:#7a1acc;
+    --green:#39ff88;
+    --green-dim:#1fae5c;
+    --bg-0:#05060a;
+    --bg-1:#0a0e17;
+    --bg-2:#10151f;
+    --panel:#0d1220;
+    --border:#1e2a3d;
+    --text:#d8e6f2;
+    --text-dim:#8397ac;
+    --danger:#ff3860;
+    --warn:#ffb400;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  @font-face{
+    font-family:'Orbitron'; src:local('Orbitron');
+  }
+
+  body{
+    background:
+      radial-gradient(circle at 20% 10%, rgba(176,38,255,0.08), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(0,255,242,0.08), transparent 40%),
+      var(--bg-0);
+    color:var(--text);
+    font-family:'Rajdhani', 'Segoe UI', sans-serif;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+    line-height:1.5;
+  }
+
+  /* grid background */
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(0,255,242,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,242,0.045) 1px, transparent 1px);
+    background-size:38px 38px;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* scanlines */
+  body::after{
+    content:'';
+    position:fixed; inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.015) 0px,
+      rgba(255,255,255,0.015) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    animation:scan 9s linear infinite;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.5;
+  }
+  @keyframes scan{ 0%{transform:translateY(0);} 100%{transform:translateY(38px);} }
+
+  .wrap{position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:18px 16px 60px;}
+
+  h1,h2,h3,.brand,.mono{font-family:'Orbitron', sans-serif;}
+  .num{font-family:'Share Tech Mono', monospace;}
+
+  header{
+    text-align:center;
+    padding:26px 10px 20px;
+  }
+  .brand{
+    font-size:13px;
+    letter-spacing:4px;
+    color:var(--cyan);
+    text-shadow:0 0 10px rgba(0,255,242,0.5);
+  }
+  header h1{
+    font-size:clamp(24px, 5vw, 42px);
+    margin:10px 0 8px;
+    background:linear-gradient(90deg, var(--cyan), var(--purple) 55%, var(--green));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:1px;
+  }
+  header p{
+    color:var(--text-dim);
+    font-size:15px;
+    max-width:640px;
+    margin:0 auto;
+  }
+
+  .panel{
+    background:linear-gradient(180deg, var(--panel), var(--bg-1));
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:22px;
+    position:relative;
+    box-shadow:0 0 0 1px rgba(0,255,242,0.03), 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .panel::before{
+    content:'';
+    position:absolute; top:0; left:16px; right:16px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity:0.6;
+  }
+
+  .panel-title{
+    display:flex; align-items:center; gap:10px;
+    font-size:18px;
+    color:var(--cyan);
+    margin-bottom:18px;
+    letter-spacing:1px;
+  }
+  .panel-title .tag{
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    color:var(--bg-0);
+    background:var(--cyan);
+    padding:2px 8px;
+    border-radius:4px;
+  }
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:720px){ .grid2{grid-template-columns:1fr;} .grid3{grid-template-columns:1fr;} }
+
+  label{
+    display:block; font-size:13px; color:var(--text-dim);
+    margin-bottom:6px; letter-spacing:0.5px;
+  }
+  .field{margin-bottom:16px;}
+
+  input[type=text], input[type=number], input[type=password], select, textarea{
+    width:100%;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:11px 12px;
+    border-radius:8px;
+    font-family:'Rajdhani', sans-serif;
+    font-size:15px;
+    outline:none;
+    transition:.2s;
+  }
+  input:focus, select:focus, textarea:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 3px rgba(0,255,242,0.12);
+  }
+  select{appearance:none; cursor:pointer;
+    background-image:linear-gradient(45deg, transparent 50%, var(--cyan) 50%), linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+    background-size:5px 5px, 5px 5px;
+    background-repeat:no-repeat;
+  }
+
+  .chip-group{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    border:1px solid var(--border);
+    background:var(--bg-2);
+    color:var(--text-dim);
+    padding:8px 13px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+    user-select:none;
+    transition:.15s;
+  }
+  .chip.active{
+    background:linear-gradient(90deg, rgba(0,255,242,0.18), rgba(176,38,255,0.18));
+    border-color:var(--cyan);
+    color:#fff;
+    box-shadow:0 0 10px rgba(0,255,242,0.15);
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(90deg, var(--cyan), var(--green));
+    color:#02110f;
+    border:none;
+    font-family:'Orbitron', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:1px;
+    padding:14px 26px;
+    border-radius:9px;
+    cursor:pointer;
+    transition:.2s;
+    width:100%;
+  }
+  .btn:hover{filter:brightness(1.12); transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn.secondary{
+    background:transparent;
+    border:1px solid var(--purple);
+    color:var(--purple);
+  }
+  .btn.secondary:hover{background:rgba(176,38,255,0.1);}
+  .btn.small{padding:9px 16px; font-size:12px; width:auto;}
+  .btn.danger-outline{border:1px solid var(--danger); color:var(--danger); background:transparent;}
+
+  /* results */
+  #resultsPanel{display:none;}
+  .kpi-row{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px;}
+  @media(max-width:900px){ .kpi-row{grid-template-columns:repeat(2,1fr);} }
+  .kpi{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px;
+    text-align:center;
+  }
+  .kpi .lbl{font-size:11px; color:var(--text-dim); letter-spacing:1px; margin-bottom:6px;}
+  .kpi .val{font-size:18px; color:var(--green); font-weight:700;}
+  .kpi.now .val{color:var(--cyan);}
+
+  canvas#chart{width:100%; height:280px; display:block;}
+
+  .risk-box{
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:16px;
+  }
+  .risk-gauge{
+    width:96px; height:96px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Share Tech Mono', monospace; font-size:22px; font-weight:700;
+    flex-shrink:0;
+    border:4px solid var(--border);
+  }
+  .risk-info h4{color:var(--text); margin-bottom:4px; font-size:15px;}
+  .risk-info p{color:var(--text-dim); font-size:13px;}
+
+  .tag-list{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  .tag-pill{
+    background:rgba(176,38,255,0.12);
+    border:1px solid var(--purple-dim);
+    color:#e3c8ff;
+    padding:6px 12px;
+    border-radius:16px;
+    font-size:12.5px;
+  }
+
+  .path-list{list-style:none; margin-top:10px;}
+  .path-list li{
+    padding:10px 12px;
+    background:var(--bg-2);
+    border-left:3px solid var(--cyan);
+    border-radius:6px;
+    margin-bottom:8px;
+    font-size:14px;
+  }
+  .path-list li b{color:var(--cyan);}
+
+  /* Claude AI roadmap box */
+  .ai-box textarea{min-height:70px; resize:vertical;}
+  .ai-output{
+    margin-top:14px;
+    background:var(--bg-2);
+    border:1px solid var(--green-dim);
+    border-radius:10px;
+    padding:16px;
+    white-space:pre-wrap;
+    font-size:14.5px;
+    color:var(--text);
+    display:none;
+  }
+  .note{font-size:12px; color:var(--text-dim); margin-top:8px; line-height:1.6;}
+  .note.warn{color:var(--warn);}
+
+  /* history */
+  .hist-item{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+    padding:10px 14px; margin-bottom:8px; font-size:13.5px; flex-wrap:wrap;
+  }
+  .hist-item span.d{color:var(--text-dim); font-size:12px;}
+
+  /* usage guide */
+  .guide{
+    background:linear-gradient(180deg, rgba(57,255,136,0.05), transparent);
+    border:1px solid var(--green-dim);
+  }
+  .guide h3{color:var(--green); margin-bottom:10px; font-size:16px;}
+  .guide ol, .guide ul{margin-left:20px; margin-bottom:10px;}
+  .guide li{margin-bottom:6px; font-size:14.5px;}
+  .guide p{margin-bottom:10px; font-size:14.5px; color:var(--text);}
+  .guide .hi{color:var(--cyan);}
+
+  .ad-slot{
+    text-align:center;
+    padding:10px;
+    margin:20px 0;
+    border:1px dashed var(--border);
+    border-radius:10px;
+    color:var(--text-dim);
+    font-size:11px;
+    letter-spacing:1px;
+    min-height:90px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  footer{text-align:center; color:var(--text-dim); font-size:12px; padding:20px 0; letter-spacing:0.5px;}
+  footer .fbrand{color:var(--cyan);}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--purple-dim); border-radius:4px;}
+
+  .row-btns{display:flex; gap:10px; flex-wrap:wrap;}
+  .row-btns .btn{width:auto; flex:1; min-width:160px;}
+
+  .spinner{
+    display:inline-block; width:14px; height:14px; border:2px solid rgba(2,17,15,0.3);
+    border-top-color:#02110f; border-radius:50%; animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">INCOMEAIHUB // CAREER INTELLIGENCE MODULE</div>
+    <h1>AI Career Income Predictor</h1>
+    <p>Apna career trajectory dekho — agle 10 saal ka income projection, AI disruption risk aur skill roadmap, sab ek jagah.</p>
+  </header>
+
+  <!-- AD SLOT TOP -->
+  <div class="ad-slot">
+    <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-title"><span>📊 Enter Your Career Details</span><span class="tag">STEP 1</span></div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Your Name (optional)</label>
+        <input type="text" id="userName" placeholder="e.g. Rohit Sharma">
+      </div>
+      <div class="field">
+        <label>Current Role / Job Title</label>
+        <input type="text" id="role" placeholder="e.g. Digital Marketing Executive">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Industry</label>
+        <select id="industry">
+          <option value="it">IT / Software / Tech</option>
+          <option value="marketing">Marketing / Digital Marketing</option>
+          <option value="finance">Finance / Accounting</option>
+          <option value="design">Design / UI-UX / Creative</option>
+          <option value="sales">Sales / Business Development</option>
+          <option value="content">Content Writing / Media</option>
+          <option value="consulting">Consulting / Strategy</option>
+          <option value="healthcare">Healthcare</option>
+          <option value="education">Education / Training</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Years of Experience</label>
+        <input type="number" id="experience" min="0" max="45" value="3">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Current Annual Income (₹)</label>
+        <input type="number" id="income" min="0" step="1000" placeholder="e.g. 600000">
+      </div>
+      <div class="field">
+        <label>Highest Education</label>
+        <select id="education">
+          <option value="hs">High School</option>
+          <option value="diploma">Diploma</option>
+          <option value="bachelor" selected>Bachelor's Degree</option>
+          <option value="master">Master's Degree</option>
+          <option value="phd">PhD / Doctorate</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>City / Client Base</label>
+        <select id="cityTier">
+          <option value="metro">Metro City (Mumbai, Delhi, Bengaluru...)</option>
+          <option value="tier2">Tier 2 City</option>
+          <option value="tier3">Tier 3 / Small Town</option>
+          <option value="global">Remote / Global Clients (Upwork/Fiverr)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Upskilling Commitment</label>
+        <select id="upskill">
+          <option value="none">No formal upskilling</option>
+          <option value="occasional">Occasional courses</option>
+          <option value="active" selected>Active certifications</option>
+          <option value="fulltime">Aggressively upskilling</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Your Key Skills (select all that apply)</label>
+      <div class="chip-group" id="skillChips"></div>
+    </div>
+
+    <div class="field">
+      <label>Target Role / Career Goal (optional — for AI roadmap)</label>
+      <input type="text" id="goal" placeholder="e.g. Become a Senior Product Manager in 3 years">
+    </div>
+
+    <button class="btn" id="predictBtn">⚡ Predict My Income Growth</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="panel" id="resultsPanel">
+    <div class="panel-title"><span>📈 Your Career Income Forecast</span><span class="tag">RESULTS</span></div>
+
+    <div class="kpi-row">
+      <div class="kpi now"><div class="lbl">TODAY</div><div class="val num" id="kpiNow">₹0</div></div>
+      <div class="kpi"><div class="lbl">YEAR 1</div><div class="val num" id="kpiY1">₹0</div></div>
+      <div class="kpi"><div class="lbl">YEAR 3</div><div class="val num" id="kpiY3">₹0</div></div>
+      <div class="kpi"><div class="lbl">YEAR 5</div><div class="val num" id="kpiY5">₹0</div></div>
+      <div class="kpi"><div class="lbl">YEAR 10</div><div class="val num" id="kpiY10">₹0</div></div>
+    </div>
+
+    <canvas id="chart"></canvas>
+
+    <div class="risk-box">
+      <div class="risk-gauge" id="riskGauge">0%</div>
+      <div class="risk-info">
+        <h4 id="riskTitle">AI Disruption Risk</h4>
+        <p id="riskDesc">Calculating exposure of your role to AI/automation over the next 5-7 years...</p>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <div class="panel-title" style="font-size:15px; margin-bottom:8px;"><span>🎯 Suggested Career Path</span></div>
+      <ul class="path-list" id="pathList"></ul>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div class="panel-title" style="font-size:15px; margin-bottom:8px;"><span>🧩 Recommended Skills to Add</span></div>
+      <div class="tag-list" id="skillGapList"></div>
+    </div>
+
+    <div class="note" id="cagrNote" style="margin-top:14px;"></div>
+  </div>
+
+  <!-- AD SLOT MID -->
+  <div class="ad-slot">
+    <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- CLAUDE AI ROADMAP -->
+  <div class="panel ai-box" id="aiPanel" style="display:none;">
+    <div class="panel-title"><span>🤖 Get Personalized AI Career Roadmap</span><span class="tag">OPTIONAL</span></div>
+    <div class="field">
+      <label>Anthropic API Key (optional — stored only in your browser's localStorage, never sent anywhere else)</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-... (leave blank to use built-in rule-based roadmap)">
+    </div>
+    <div class="row-btns">
+      <button class="btn secondary" id="roadmapBtn">✨ Generate Career Roadmap</button>
+      <button class="btn small danger-outline" id="clearKeyBtn">Clear Saved Key</button>
+    </div>
+    <div class="ai-output" id="aiOutput"></div>
+    <p class="note warn">⚠️ Agar API key nahi doge, tool automatically ek rule-based roadmap generate karega — bilkul free, bina key ke bhi kaam karta hai.</p>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="panel" id="historyPanel" style="display:none;">
+    <div class="panel-title"><span>🕘 Your Past Predictions</span><span class="tag">SAVED</span></div>
+    <div id="historyList"></div>
+    <button class="btn small danger-outline" id="clearHistBtn" style="margin-top:8px;">Clear All History</button>
+  </div>
+
+  <!-- AD SLOT BOTTOM -->
+  <div class="ad-slot">
+    <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- HINGLISH USAGE GUIDE -->
+  <div class="panel guide">
+    <h3>📘 Is Tool Ko Kaise Use Karein (Hindi Guide)</h3>
+    <p>Yeh <span class="hi">AI Career Income Predictor</span> aapko batata hai ki agle <span class="hi">1, 3, 5 aur 10 saal</span> mein aapki income kitni ho sakti hai — aapke role, experience, skills, city aur upskilling ke basis par.</p>
+    <ol>
+      <li>Sabse pehle apna <span class="hi">current role, industry, experience aur annual income</span> daalein.</li>
+      <li>Apni <span class="hi">education, city tier</span> aur <span class="hi">upskilling commitment</span> select karein.</li>
+      <li>Apne <span class="hi">key skills</span> chips par click karke select karein (jitne applicable hain).</li>
+      <li>"⚡ Predict My Income Growth" button dabayein — turant aapko income forecast chart, AI disruption risk, career path suggestions aur skill gap recommendations milenge.</li>
+      <li>Agar aapke paas Anthropic API key hai, toh "🤖 Get Personalized AI Career Roadmap" section mein daal kar ek detailed, personalized roadmap generate kar sakte hain. Key nahi hai toh chinta mat karo — tool khud ek built-in rule-based roadmap bana dega, bilkul free.</li>
+      <li>Har prediction automatically <span class="hi">"Your Past Predictions"</span> section mein save ho jaata hai (aapke browser mein hi, kahin aur nahi jaata) — future mein compare karne ke liye.</li>
+    </ol>
+    <p><b class="hi">Tip:</b> Yeh tool sirf ek estimate deta hai, based on industry averages aur trends — real income growth aapke performance, negotiation aur market conditions par bhi depend karta hai. Use it as a directional guide, financial advice nahi hai yeh.</p>
+  </div>
+
+  <footer>
+    Built with <span class="fbrand">IncomeAIHub</span> • AI-Powered Tools for Indian Freelancers & Professionals
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============== CONFIG / DATA ============== */
+  const INDUSTRY = {
+    it:         { label:"IT / Software / Tech",        baseRate:0.13, riskBase:35 },
+    marketing:  { label:"Marketing / Digital Marketing",baseRate:0.09, riskBase:45 },
+    finance:    { label:"Finance / Accounting",         baseRate:0.10, riskBase:40 },
+    design:     { label:"Design / UI-UX / Creative",    baseRate:0.10, riskBase:38 },
+    sales:      { label:"Sales / Business Development", baseRate:0.08, riskBase:30 },
+    content:    { label:"Content Writing / Media",      baseRate:0.07, riskBase:55 },
+    consulting: { label:"Consulting / Strategy",        baseRate:0.12, riskBase:25 },
+    healthcare: { label:"Healthcare",                   baseRate:0.09, riskBase:15 },
+    education:  { label:"Education / Training",         baseRate:0.06, riskBase:20 },
+    other:      { label:"Other",                        baseRate:0.07, riskBase:35 }
+  };
+
+  const CITY_MULT = { metro:1.15, tier2:1.0, tier3:0.85, global:1.28 };
+  const EDU_MULT  = { hs:0.90, diploma:0.95, bachelor:1.0, master:1.10, phd:1.15 };
+  const UPSKILL_MULT = { none:1.0, occasional:1.08, active:1.16, fulltime:1.27 };
+  const UPSKILL_RISK_REDUCE = { none:0, occasional:6, active:14, fulltime:24 };
+
+  const SKILLS = [
+    { id:"aiml",    label:"AI / Machine Learning", premium:0.030, riskReduce:14 },
+    { id:"cloud",   label:"Cloud Computing",        premium:0.024, riskReduce:9  },
+    { id:"data",    label:"Data Analysis",          premium:0.022, riskReduce:8  },
+    { id:"digimkt", label:"Digital Marketing",      premium:0.016, riskReduce:5  },
+    { id:"content", label:"Content / Copywriting",  premium:0.012, riskReduce:3  },
+    { id:"design",  label:"Design / UI-UX",         premium:0.018, riskReduce:6  },
+    { id:"sales",   label:"Sales / Negotiation",    premium:0.015, riskReduce:4  },
+    { id:"pm",      label:"Project Management",     premium:0.020, riskReduce:7  },
+    { id:"coding",  label:"Coding / Development",   premium:0.026, riskReduce:10 },
+    { id:"comm",    label:"Communication / Leadership", premium:0.017, riskReduce:6 }
+  ];
+
+  const HIGH_RISK_KEYWORDS = ["data entry","typist","typing","telecaller","telecalling","bpo","back office","clerk","billing","cashier","receptionist","transcription","proofreading","customer support","support executive"];
+  const LOW_RISK_KEYWORDS  = ["strategy","leadership","manager","creative director","therapist","doctor","nurse","teacher","counselor","architect","research scientist","founder","consultant"];
+
+  const CAREER_PATHS = {
+    it: ["Junior Developer → Software Engineer","Software Engineer → Senior Engineer / Tech Lead","Tech Lead → Engineering Manager / Architect","Consider specializing in AI/Cloud for fastest growth"],
+    marketing: ["Executive → Senior Executive → Manager","Manager → Marketing Head / Growth Lead","Build a personal brand + freelance consulting on the side","Specialize in Performance Marketing or Marketing Analytics"],
+    finance: ["Analyst → Senior Analyst → Finance Manager","Finance Manager → Controller / Finance Head","Consider CFA / CA specialization for premium roles","Explore fintech & investment advisory niches"],
+    design: ["Junior Designer → Designer → Senior Designer","Senior Designer → Design Lead / Creative Director","Build a strong portfolio + freelance on Behance/Dribbble","Specialize in UI/UX or Product Design for higher pay"],
+    sales: ["Sales Executive → Senior Executive → Sales Manager","Sales Manager → Regional Head / VP Sales","Move into enterprise/B2B sales for higher commissions","Build negotiation & CRM tool expertise"],
+    content: ["Writer → Senior Writer → Content Lead","Content Lead → Head of Content / Editor-in-Chief","Diversify into SEO + video scripting for premium clients","Consider freelancing on Upwork/Fiverr for global rates"],
+    consulting: ["Associate → Senior Associate → Consultant","Consultant → Senior Consultant → Principal","Specialize in a high-demand niche (AI strategy, ESG, etc.)","Build a personal brand to attract direct clients"],
+    healthcare: ["Junior Role → Specialist → Senior Specialist","Senior Specialist → Department Head","Consider higher certifications for specialization premium","Explore telehealth / consulting opportunities"],
+    education: ["Teacher/Trainer → Senior Trainer → Academic Head","Academic Head → Institution Leadership","Build an online course / personal brand for extra income","Specialize in ed-tech or corporate training"],
+    other: ["Entry Role → Mid-level Specialist","Specialist → Team Lead / Manager","Identify a high-growth niche within your field","Invest in one high-demand skill for a pay premium"]
+  };
+
+  const $ = id => document.getElementById(id);
+  const inrFmt = n => "₹" + Math.round(n).toLocaleString('en-IN');
+
+  /* ============== BUILD SKILL CHIPS ============== */
+  const chipWrap = $("skillChips");
+  SKILLS.forEach(s=>{
+    const c = document.createElement('div');
+    c.className='chip';
+    c.textContent = s.label;
+    c.dataset.id = s.id;
+    c.addEventListener('click', ()=> c.classList.toggle('active'));
+    chipWrap.appendChild(c);
+  });
+
+  function getSelectedSkills(){
+    return [...chipWrap.querySelectorAll('.chip.active')].map(c=>c.dataset.id);
+  }
+
+  /* ============== PREDICTION ENGINE ============== */
+  function tapering(exp){
+    // growth rate tapers as experience grows (seniority plateau)
+    if(exp <= 3) return 1.15;
+    if(exp <= 7) return 1.0;
+    if(exp <= 12) return 0.85;
+    if(exp <= 20) return 0.68;
+    return 0.5;
+  }
+
+  function calcRisk(role, industryKey, upskillKey, selectedSkills){
+    const roleLower = (role||"").toLowerCase();
+    let risk = INDUSTRY[industryKey].riskBase;
+
+    HIGH_RISK_KEYWORDS.forEach(k=>{ if(roleLower.includes(k)) risk += 18; });
+    LOW_RISK_KEYWORDS.forEach(k=>{ if(roleLower.includes(k)) risk -= 12; });
+
+    risk -= UPSKILL_RISK_REDUCE[upskillKey];
+    selectedSkills.forEach(id=>{
+      const sk = SKILLS.find(s=>s.id===id);
+      if(sk) risk -= sk.riskReduce;
+    });
+
+    risk = Math.max(4, Math.min(96, Math.round(risk)));
+    return risk;
+  }
+
+  function riskLabel(r){
+    if(r < 30) return {text:"Low Risk", color:"var(--green)"};
+    if(r < 60) return {text:"Moderate Risk", color:"var(--warn)"};
+    return {text:"High Risk", color:"var(--danger)"};
+  }
+
+  function predict(){
+    const role = $("role").value.trim() || "your role";
+    const industryKey = $("industry").value;
+    const exp = Math.max(0, parseFloat($("experience").value) || 0);
+    const income = Math.max(0, parseFloat($("income").value) || 0);
+    const eduKey = $("education").value;
+    const cityKey = $("cityTier").value;
+    const upskillKey = $("upskill").value;
+    const skills = getSelectedSkills();
+
+    if(income <= 0){
+      alert("Kripya apni current annual income daalein (Please enter your current annual income).");
+      return null;
+    }
+
+    const industryData = INDUSTRY[industryKey];
+    let rate = industryData.baseRate;
+    rate *= CITY_MULT[cityKey];
+    rate *= EDU_MULT[eduKey];
+    rate *= UPSKILL_MULT[upskillKey];
+    rate *= tapering(exp);
+
+    const skillPremium = skills.reduce((sum,id)=>{
+      const sk = SKILLS.find(s=>s.id===id);
+      return sum + (sk ? sk.premium : 0);
+    },0);
+    rate += skillPremium;
+
+    rate = Math.min(rate, 0.32); // cap unrealistic growth
+
+    const years = [];
+    let val = income;
+    for(let y=0; y<=10; y++){
+      years.push(Math.round(val));
+      val = val * (1+rate);
+    }
+
+    const risk = calcRisk(role, industryKey, upskillKey, skills);
+    const path = CAREER_PATHS[industryKey];
+
+    const allSkillIds = SKILLS.map(s=>s.id);
+    const missing = allSkillIds.filter(id=>!skills.includes(id))
+      .sort((a,b)=> SKILLS.find(s=>s.id===b).premium - SKILLS.find(s=>s.id===a).premium)
+      .slice(0,4)
+      .map(id=>SKILLS.find(s=>s.id===id).label);
+
+    return { role, industryKey, exp, income, eduKey, cityKey, upskillKey, skills, rate, years, risk, path, missing, goal: $("goal").value.trim() };
+  }
+
+  /* ============== CHART ============== */
+  function drawChart(years){
+    const canvas = $("chart");
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
+    const cssH = 280;
+    canvas.width = cssW*dpr; canvas.height = cssH*dpr;
+    canvas.style.height = cssH+"px";
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr,dpr);
+    ctx.clearRect(0,0,cssW,cssH);
+
+    const padL = 68, padR = 16, padT = 20, padB = 34;
+    const w = cssW - padL - padR;
+    const h = cssH - padT - padB;
+
+    const maxVal = Math.max(...years) * 1.08;
+    const minVal = 0;
+
+    // gridlines
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.lineWidth = 1;
+    ctx.font = "11px 'Share Tech Mono', monospace";
+    ctx.fillStyle = "#8397ac";
+    for(let i=0;i<=4;i++){
+      const y = padT + h - (h*i/4);
+      ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+w,y); ctx.stroke();
+      const val = minVal + (maxVal-minVal)*i/4;
+      ctx.fillText("₹"+Math.round(val/1000)+"k", 4, y+4);
+    }
+
+    // x labels
+    years.forEach((v,i)=>{
+      const x = padL + (w * i/(years.length-1));
+      if(i%1===0){
+        ctx.fillText("Y"+i, x-8, padT+h+20);
+      }
+    });
+
+    // gradient line
+    const grad = ctx.createLinearGradient(padL,0,padL+w,0);
+    grad.addColorStop(0,"#00fff2");
+    grad.addColorStop(0.5,"#b026ff");
+    grad.addColorStop(1,"#39ff88");
+
+    ctx.beginPath();
+    years.forEach((v,i)=>{
+      const x = padL + (w * i/(years.length-1));
+      const y = padT + h - (h * (v-minVal)/(maxVal-minVal));
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = "rgba(0,255,242,0.5)";
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // fill under curve
+    ctx.lineTo(padL+w, padT+h);
+    ctx.lineTo(padL, padT+h);
+    ctx.closePath();
+    const fillGrad = ctx.createLinearGradient(0,padT,0,padT+h);
+    fillGrad.addColorStop(0,"rgba(0,255,242,0.18)");
+    fillGrad.addColorStop(1,"rgba(0,255,242,0)");
+    ctx.fillStyle = fillGrad;
+    ctx.fill();
+
+    // points
+    years.forEach((v,i)=>{
+      const x = padL + (w * i/(years.length-1));
+      const y = padT + h - (h * (v-minVal)/(maxVal-minVal));
+      ctx.beginPath();
+      ctx.arc(x,y,3.2,0,Math.PI*2);
+      ctx.fillStyle = "#05060a";
+      ctx.fill();
+      ctx.lineWidth=1.6;
+      ctx.strokeStyle="#00fff2";
+      ctx.stroke();
+    });
+  }
+
+  /* ============== RENDER RESULTS ============== */
+  function render(data){
+    $("kpiNow").textContent = inrFmt(data.years[0]);
+    $("kpiY1").textContent  = inrFmt(data.years[1]);
+    $("kpiY3").textContent  = inrFmt(data.years[3]);
+    $("kpiY5").textContent  = inrFmt(data.years[5]);
+    $("kpiY10").textContent = inrFmt(data.years[10]);
+
+    drawChart(data.years);
+
+    const rl = riskLabel(data.risk);
+    const gauge = $("riskGauge");
+    gauge.textContent = data.risk + "%";
+    gauge.style.color = rl.color;
+    gauge.style.borderColor = rl.color;
+    $("riskTitle").textContent = "AI Disruption Risk: " + rl.text;
+    $("riskDesc").textContent = data.risk < 30
+      ? "Aapka role AI automation se largely safe hai — human judgement, creativity ya relationship-building is core hai. Keep upskilling to stay ahead."
+      : (data.risk < 60
+        ? "Aapke role ke kuch parts automate ho sakte hain agle 5-7 saal mein. AI tools ko adopt karke aur higher-order skills seekh kar risk kam kar sakte ho."
+        : "Aapka role high automation risk mein hai. Strongly recommend: naye AI-resistant skills seekhna (strategy, creative direction, complex problem-solving) jaldi se jaldi.");
+
+    const pathList = $("pathList");
+    pathList.innerHTML = "";
+    data.path.forEach(p=>{
+      const li = document.createElement('li');
+      li.innerHTML = p;
+      pathList.appendChild(li);
+    });
+
+    const gapList = $("skillGapList");
+    gapList.innerHTML = "";
+    if(data.missing.length===0){
+      gapList.innerHTML = "<span class='tag-pill'>Great! Aap already high-demand skills cover kar rahe ho.</span>";
+    } else {
+      data.missing.forEach(m=>{
+        const p = document.createElement('span');
+        p.className='tag-pill';
+        p.textContent = m;
+        gapList.appendChild(p);
+      });
+    }
+
+    const cagr = (Math.pow(data.years[10]/data.years[0], 1/10) - 1) * 100;
+    $("cagrNote").innerHTML = `📌 Estimated CAGR: <b style="color:var(--cyan)">${cagr.toFixed(1)}%</b> per year, based on your industry, experience, city, education & upskilling inputs. This is a directional estimate, not a guarantee.`;
+
+    $("resultsPanel").style.display = "block";
+    $("aiPanel").style.display = "block";
+    $("resultsPanel").scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  /* ============== HISTORY (localStorage) ============== */
+  const HIST_KEY = "aicip_history";
+  function loadHistory(){
+    try{ return JSON.parse(localStorage.getItem(HIST_KEY)) || []; }catch(e){ return []; }
+  }
+  function saveHistory(list){
+    localStorage.setItem(HIST_KEY, JSON.stringify(list.slice(-20)));
+  }
+  function pushHistory(data){
+    const list = loadHistory();
+    list.push({
+      date: new Date().toLocaleDateString('en-IN'),
+      role: data.role,
+      income: data.years[0],
+      y5: data.years[5],
+      y10: data.years[10]
+    });
+    saveHistory(list);
+    renderHistory();
+  }
+  function renderHistory(){
+    const list = loadHistory();
+    const wrap = $("historyList");
+    const panel = $("historyPanel");
+    if(list.length===0){ panel.style.display="none"; return; }
+    panel.style.display="block";
+    wrap.innerHTML = "";
+    list.slice().reverse().forEach(item=>{
+      const div = document.createElement('div');
+      div.className='hist-item';
+      div.innerHTML = `<span>${item.role} — ${inrFmt(item.income)} → ${inrFmt(item.y10)} (Y10)</span><span class="d">${item.date}</span>`;
+      wrap.appendChild(div);
+    });
+  }
+  $("clearHistBtn").addEventListener('click', ()=>{
+    if(confirm("Saari history delete karni hai?")){
+      localStorage.removeItem(HIST_KEY);
+      renderHistory();
+    }
+  });
+
+  /* ============== PREDICT BUTTON ============== */
+  let lastData = null;
+  $("predictBtn").addEventListener('click', ()=>{
+    const data = predict();
+    if(!data) return;
+    lastData = data;
+    render(data);
+    pushHistory(data);
+  });
+
+  window.addEventListener('resize', ()=>{ if(lastData) drawChart(lastData.years); });
+
+  /* ============== CLAUDE API KEY STORAGE ============== */
+  const KEY_STORAGE = "aicip_api_key";
+  const savedKey = localStorage.getItem(KEY_STORAGE);
+  if(savedKey) $("apiKey").value = savedKey;
+  $("apiKey").addEventListener('change', ()=>{
+    if($("apiKey").value.trim()) localStorage.setItem(KEY_STORAGE, $("apiKey").value.trim());
+  });
+  $("clearKeyBtn").addEventListener('click', ()=>{
+    localStorage.removeItem(KEY_STORAGE);
+    $("apiKey").value = "";
+    alert("API key cleared.");
+  });
+
+  /* ============== RULE-BASED FALLBACK ROADMAP ============== */
+  function ruleBasedRoadmap(data){
+    const name = $("userName").value.trim() || "Dost";
+    const goal = data.goal || "your next career milestone";
+    const rl = riskLabel(data.risk);
+    return `👋 Namaste ${name}!
+
+Based on your profile as a ${data.role} in ${INDUSTRY[data.industryKey].label} with ${data.exp} years experience:
+
+🎯 GOAL: ${goal}
+
+📈 INCOME TRAJECTORY:
+- Today: ${inrFmt(data.years[0])}/year
+- In 5 years: ${inrFmt(data.years[5])}/year (est.)
+- In 10 years: ${inrFmt(data.years[10])}/year (est.)
+
+⚠️ AI RISK LEVEL: ${data.risk}% (${rl.text})
+${data.risk >= 60 ? "Priority: Start learning AI-resistant, high-judgement skills immediately." : "You're relatively well-positioned, but continuous upskilling is key."}
+
+🧩 SKILLS TO FOCUS ON NEXT:
+${data.missing.map(m=>"  • "+m).join("\n") || "  • Keep deepening your current high-value skills"}
+
+🗺️ SUGGESTED PATH:
+${data.path.map(p=>"  → "+p.replace(/<b>|<\/b>/g,"")).join("\n")}
+
+💡 QUICK WINS:
+  • Take 1 certification in a high-premium skill every 6 months
+  • Build a portfolio/case-study showcasing measurable impact
+  • Negotiate salary/rate hikes tied to new skills acquired
+  • If in a metro/global-client role, explore freelancing on Upwork/Fiverr for extra income
+
+This is a rule-based roadmap generated locally. For a deeper, AI-personalized version, add your Anthropic API key above.`;
+  }
+
+  /* ============== CLAUDE API CALL ============== */
+  $("roadmapBtn").addEventListener('click', async ()=>{
+    if(!lastData){
+      alert("Pehle apni details bharkar 'Predict My Income Growth' dabao.");
+      return;
+    }
+    const btn = $("roadmapBtn");
+    const output = $("aiOutput");
+    const key = $("apiKey").value.trim();
+
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="spinner"></span> Generating...';
+    output.style.display = "block";
+    output.textContent = "Generating your roadmap...";
+
+    if(!key){
+      output.textContent = ruleBasedRoadmap(lastData);
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    const prompt = `You are a career advisor for Indian professionals. Based on this profile, write a short, actionable, personalized career roadmap (max 250 words) in a friendly Hinglish tone:
+Role: ${lastData.role}
+Industry: ${INDUSTRY[lastData.industryKey].label}
+Experience: ${lastData.exp} years
+Current Income: ${inrFmt(lastData.years[0])}/year
+City tier: ${lastData.cityKey}
+Education: ${lastData.eduKey}
+Skills: ${lastData.skills.join(", ") || "none selected"}
+AI Disruption Risk: ${lastData.risk}%
+Goal: ${lastData.goal || "career growth"}
+Projected 10-year income: ${inrFmt(lastData.years[10])}/year
+
+Give: 1) A brief assessment, 2) 3-4 concrete next steps, 3) 1-2 skills to prioritize.`;
+
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          messages: [{ role:"user", content: prompt }]
+        })
+      });
+
+      if(!response.ok) throw new Error("API request failed: " + response.status);
+      const resData = await response.json();
+      const text = (resData.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+      output.textContent = text || ruleBasedRoadmap(lastData);
+    }catch(err){
+      console.error(err);
+      output.textContent = "⚠️ AI API call failed (check your key / network). Showing rule-based roadmap instead:\n\n" + ruleBasedRoadmap(lastData);
+    }finally{
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
+
+  /* ============== INIT ============== */
+  renderHistory();
+
+})();
+</script>
+</body>
+</html>
